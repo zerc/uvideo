@@ -1,11 +1,6 @@
 {% extends 'base.html' %}
 {% load bootstrap3 %}
 
-{% block js %}
-  {{ block.super }}
-  {{ form.media }}
-{% endblock %}
-
 {% block body %}
   <h3>{{ form_title }}</h3><br>
   <form action="" method="POST">{% csrf_token %}
@@ -37,4 +32,24 @@
     {% endfor %}
     </div>
   {% endif %}
+{% endblock %}
+
+{% block js %}
+  {{ block.super }}
+  {{ form.media }}
+  <script type="text/javascript">
+    $(function () {
+      // Hack for changing button title
+      var interval_id = setInterval(function () {
+        var target = $('input[name="cover"]')
+                        .next()
+                        .find('.uploadcare-widget-button-open');
+
+        if (target.length > 0) {
+          target.text('Choose a cover');
+          clearInterval(interval_id);
+        }
+      });
+    }());
+  </script>
 {% endblock %}
