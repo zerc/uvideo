@@ -1,6 +1,19 @@
 {% extends 'base.html' %}
 {% load bootstrap3 %}
 
+{% block extra_head %}
+  <link href="http://vjs.zencdn.net/5.0.0/video-js.css" rel="stylesheet">
+  <script src="http://vjs.zencdn.net/ie8/1.1.0/videojs-ie8.min.js"></script>
+  <script type="text/javascript">
+    window.HELP_IMPROVE_VIDEOJS = false;
+  </script>
+{% endblock %}
+
+{% block js %}
+  {{ block.super }}
+  <script src="http://vjs.zencdn.net/5.0.0/video.js"></script>
+{% endblock %}
+
 {% block body %}
   <h3>{{ object }}</h3>
 
@@ -10,34 +23,34 @@
     </a>
   {% endbuttons %}
 
-  <ul class="media-list">
-    <li class="media">
-      <div class="media-left">
-        {% if object.cover %}
-          <img class="media-object" src="{{ object.cover.cdn_url }}-/scale_crop/128x128/center/" />
-        {% else %}
-          <div class="no_cover_128 js-no-cover"></div>
-        {% endif %}
-      </div>
-      <div class="media-body">
-        <p>{{ object.description|default:"No description" }}</p>
-      </div>
+  <video id="video" class="video-js vjs-default-skin"
+      controls preload="auto" width="640" height="264"
+      {% if object.cover %} poster="{{ object.cover.cdn_url }}-/scale_crop/640x264/center/"{% endif %}
+      data-setup='{"example_option":true}'>
+     <source src="{{ object.video_file.info.original_file_url }}" type='video/mp4' />
+
+     <p class="vjs-no-js">To view this video please enable JavaScript, and consider upgrading to a web browser that <a href="http://videojs.com/html5-video-support/" target="_blank">supports HTML5 video</a></p>
+  </video>
+  <p class="text-muted">* player is <a href="http://videojs.com/" target="_blank" rel="nofollow">videojs</a></p>
+
+  <h3>Description</h3>
+  <hr>
+
+  <p>{{ object.description|default:"No description" }}</p>
+
+  <ul>
+    <li>
+      <a href="{{ object.video_file.info.original_file_url }}">
+        Download
+      </a>
     </li>
-    <li class="media">
-      <ul>
-        <li>
-          <a href="{{ object.video_file.info.original_file_url }}">
-            Download
-          </a>
-        </li>
-        <li>Filename: {{ object.video_file.info.original_filename }}</li>
-        <li>Type: {{ object.video_file.info.mime_type }}</li>
-        <li>Size: {{ object.video_file.info.size|filesizeformat }}</li>
-      </ul>
-    </li>
+    <li>Filename: {{ object.video_file.info.original_filename }}</li>
+    <li>Type: {{ object.video_file.info.mime_type }}</li>
+    <li>Size: {{ object.video_file.info.size|filesizeformat }}</li>
   </ul>
 
   <h3>Comments</h3>
+  <hr>
 
   <div id="disqus_thread"></div>
   <script>
