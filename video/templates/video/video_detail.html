@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+{% load bootstrap3 %}
+
+{% block body %}
+  <h3>{{ object }}</h3>
+
+  {% buttons %}
+    <a href="{% url 'video:video-update' object.pk %}" class="btn btn-default">
+      {% bootstrap_icon "pencil" %} Edit video
+    </a>
+  {% endbuttons %}
+
+  <ul class="media-list">
+    <li class="media">
+      <div class="media-left">
+        {% if object.cover %}
+          <img class="media-object" src="{{ object.cover.cdn_url }}-/scale_crop/128x128/center/" />
+        {% else %}
+          <div class="no_cover_128 js-no-cover"></div>
+        {% endif %}
+      </div>
+      <div class="media-body">
+        <p>{{ object.description|default:"No description" }}</p>
+      </div>
+    </li>
+    <li class="media">
+      <ul>
+        <li>
+          <a href="{{ object.video_file.info.original_file_url }}">
+            Download
+          </a>
+        </li>
+        <li>Filename: {{ object.video_file.info.original_filename }}</li>
+        <li>Type: {{ object.video_file.info.mime_type }}</li>
+        <li>Size: {{ object.video_file.info.size|filesizeformat }}</li>
+      </ul>
+    </li>
+  </ul>
+
+  <h3>Comments</h3>
+
+  <div id="disqus_thread"></div>
+  <script>
+      var disqus_config = function () {
+          this.page.url = window.location.href;
+          this.page.identifier = '{{ object.get_absolute_url }}';
+      };
+      (function() {
+          var d = document, s = d.createElement('script');
+
+          s.src = '//uvideo.disqus.com/embed.js';
+
+          s.setAttribute('data-timestamp', +new Date());
+          (d.head || d.body).appendChild(s);
+      })();
+  </script>
+  <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
+
+{% endblock %}

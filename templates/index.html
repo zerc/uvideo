@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% load video_tags %}
+
+{% block body %}
+  <div class="jumbotron">
+    <h1>uVideo</h1>
+    <p>Is a simplest example of file storge service based on <a href="https://uploadcare.com/" target="_blank">Uploadcare</a></p>
+  </div>
+
+  {% render_recent_collections_block %}
+{% endblock %}

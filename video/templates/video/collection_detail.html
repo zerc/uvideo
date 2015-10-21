@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+{% load bootstrap3 %}
+
+{% block body %}
+  <h3>{{ object }}</h3>
+
+  {% buttons %}
+    <a href="{% url 'video:collection-update' object.pk %}" class="btn btn-default">
+      {% bootstrap_icon "pencil" %} Edit collection
+    </a>
+  {% endbuttons %}
+
+  {% if object.description %}
+    <p>{{ object.description }}</p>
+  {% endif %}
+
+  <h3>Videos</h3>
+  <hr>
+  <ul class="media-list">
+    {% for video in object.video_set.all %}
+      <li class="media">
+        <div class="media-left">
+          <a href="{{ video.get_absolute_url }}">
+            {% if video.cover %}
+              <img class="media-object" src="{{ video.cover.cdn_url }}-/scale_crop/64x64/center/" />
+            {% else %}
+              <div class="no_cover js-no-cover"></div>
+            {% endif %}
+          </a>
+        </div>
+        <div class="media-body">
+          <h4 class="media-heading">
+            <a href="{{ video.get_absolute_url }}">
+              {{ video }}
+            </a>
+          </h4>
+            <p>{{ video.description|truncatechars:100 }}</p>
+        </div>
+      </li>
+    {% endfor %}
+  </ul>
+{% endblock %}

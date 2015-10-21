@@ -1,0 +1,42 @@
+<div class="panel panel-info recent_collections_block">
+  <div class="panel-heading">
+    <h2 class="pull-left" style="margin:0;">
+      Latest video collections
+    </h2>
+    <a class="btn btn-success pull-right" href="{% url 'video:collection-add' %}" role="button">
+      Add another one
+    </a>
+    <br class="clear"></br>
+  </div>
+  <div class="row">
+    {% for chunk in videos_chunks %}
+      <div class="col-md-6">
+        <ul class="media-list">
+          {% for object in chunk %}
+            <li class="media">
+              <div class="media-left">
+                <a href="{{ object.get_absolute_url }}">
+                  {% if object.cover %}
+                    <img class="media-object" src="{{ object.cover.cdn_url }}-/scale_crop/64x64/center/" />
+                  {% else %}
+                    <div style="width:64px;height:64px;" class="no_photo js-no-cover"></div>
+                  {% endif %}
+                </a>
+              </div>
+              <div class="media-body">
+                <h4 class="media-heading">
+                  <a href="{{ object.get_absolute_url }}">
+                    {{ object }}
+                  </a>
+                </h4>
+                  <p>{{ object.description|truncatechars:100 }}</p>
+              </div>
+            </li>
+          {% endfor %}
+        </ul>
+      </div>
+    {% empty %}
+      <div class="col-md-12"><p>Empty</p></div>
+    {% endfor %}
+  </div>
+</div>

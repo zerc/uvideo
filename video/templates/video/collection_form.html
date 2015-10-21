@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+{% load bootstrap3 %}
+
+{% block js %}
+  {{ block.super }}
+  {{ form.media }}
+{% endblock %}
+
+{% block body %}
+  <h3>{{ form_title }}</h3><br>
+  <form action="" method="POST">{% csrf_token %}
+    {% bootstrap_form form show_label=False %}
+    {% buttons %}
+      <button type="submit" class="btn btn-primary">
+        {% bootstrap_icon button_icon %} {{ button_title }}
+      </button>
+    {% endbuttons %}
+  </form>
+
+  {% if form.instance.pk and form.instance.video_set %}
+    <h4>Videos</h4>
+    <hr>
+    <div style="margin-left:-10px;">
+    {% for p in form.instance.video_set.all %}
+      <a href="{% url 'video:video-delete' p.pk %}" class="video_remove_link js-remove-video" title="Delete video from collection">
+        <div class="video_remove_overflow">
+          <span class="glyphicon glyphicon-remove"></span>
+        </div>
+        {% if p.cover %}
+          <img src="{{ p.cover.cdn_url }}-/scale_crop/64x64/center/" width="64" height="64" />
+        {% else %}
+          <div class="no_cover js-no-cover"></div>
+        {% endif %}
+      </a>
+    {% empty %}
+      No videos.
+    {% endfor %}
+    </div>
+  {% endif %}
+{% endblock %}
