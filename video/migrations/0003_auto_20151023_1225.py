@@ -10,7 +10,7 @@ def migrate_users(apps, *args, **kwargs):
 
     user = User.objects.first()
 
-    for col in Collection.objects.filter(user=0):
+    for col in Collection.objects.filter(user=1):
         col.user_id = user.pk
         col.save()
 
