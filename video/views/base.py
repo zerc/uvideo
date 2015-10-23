@@ -19,13 +19,17 @@ class CanUpdateMixin(object):
     def get_object(self, *args, **kwargs):
         obj = super(CanUpdateMixin, self).get_object(*args, **kwargs)
 
-        if self.request.user.is_superuser:
-            return obj
+        # For update views - check permissions for object
+        if getattr(self, 'form_class', None):
+            if self.request.user.is_superuser:
+                return obj
 
-        if self.user_can_update(obj):
-            return obj
+            if self.user_can_update(obj):
+                return obj
 
-        raise Http404
+            raise Http404
+
+        return obj
 
     def get_context_data(self, *args, **kwargs):
         context = super(CanUpdateMixin, self).get_context_data(*args, **kwargs)
