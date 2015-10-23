@@ -14,7 +14,7 @@
         Latest video collections
       </h2>
 
-      {% if request.user.is_authenticated %}
+      {% if IS_USER_CAN_ADD_CONTENT %}
         <a class="btn btn-success pull-right" href="{% url 'video:collection-add' %}" role="button">
           Add another one
         </a>
