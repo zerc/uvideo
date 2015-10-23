@@ -33,7 +33,26 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="/">uVideo</a>
+          <a class="navbar-brand" href="/">uGallery</a>
+        </div>
+
+        <div id="navbar" class="navbar-collapse collapse">
+          {% if request.user.is_authenticated %}
+            <ul class="nav navbar-nav">
+              <li><a href="{% url 'video:collection-list' %}">
+                My Collections
+              </a></li>
+            </ul>
+          {% endif %}
+
+          <ul class="nav navbar-nav navbar-right">
+            {% if request.user.is_authenticated %}
+              <li><p class="navbar-text">Signed in as {{ request.user }}</p></li>
+              <li><a href="{% url 'logout' %}">Exit</a></li>
+            {% else %}
+              <li><a href="{% url 'socialauth_begin' 'github' %}">Login</a></li>
+            {% endif %}
+          </ul>
         </div>
       </div>
     </nav>
@@ -41,7 +60,15 @@
     <div class="container">
         <div class="row">
           <div class="col-md-2"></div>
-          <div class="col-md-8">{% block body %}{% endblock %}</div>
+          <div class="col-md-8">
+            {% block breadcrumbs %}
+              <ol class="breadcrumb">
+                <li><a href="/">Home</a></li>
+                {% block breadcrumbs__inner %}{% endblock %}
+              </ol>
+            {% endblock %}
+            {% block body %}{% endblock %}
+          </div>
           <div class="col-md-2"></div>
         </div>
     </div>

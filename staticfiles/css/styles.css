@@ -48,12 +48,19 @@ a.navbar-brand {
 .navbar-text {
     padding-left: 15px;
 }
+.media-list {
+    margin-bottom: 0;
+    margin-top: 10px;
+}
+.media-last {
+    border: 0;
+}
 .media-list .media {
-    border-radius: 4px;
-    -webkit-box-shadow: 0 1px 2px rgba(0,0,0,.075);
-    box-shadow: 0 1px 2px rgba(0,0,0,.075);
-    border: 1px solid #eee;
-    padding: 5px;
+    border-bottom: 1px solid #bce8f1;
+    padding: 0 10px 10px 10px;
+}
+.collection_detail .media {
+    border-color: #ddd;
 }
 .footer {
     text-align: center;

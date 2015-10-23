@@ -1,0 +1,94 @@
+{% extends "base.html" %}
+
+{% block breadcrumbs %}{% endblock %}
+
+{% block body %}
+  <div class="jumbotron">
+    <h1>uVideo</h1>
+    <p>Is a simplest example of file storge service based on <a href="https://uploadcare.com/" target="_blank">Uploadcare</a></p>
+  </div>
+
+  <div class="panel panel-info">
+    <div class="panel-heading">
+      <h2 class="pull-left" style="margin:0;">
+        Latest video collections
+      </h2>
+
+      {% if request.user.is_authenticated %}
+        <a class="btn btn-success pull-right" href="{% url 'video:collection-add' %}" role="button">
+          Add another one
+        </a>
+      {% endif %}
+
+      <br class="clear"></br>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+          <ul class="media-list">
+            {% for object in object_list %}
+              <li class="media{% if forloop.last %} media-last{% endif %}">
+                <div class="media-left">
+                  <a href="{{ object.get_absolute_url }}">
+                    {% if object.cover %}
+                      <img class="media-object" src="{{ object.cover.cdn_url }}-/scale_crop/64x64/center/" />
+                    {% else %}
+                      <div style="width:64px;height:64px;" class="no_photo js-no-cover"></div>
+                    {% endif %}
+                  </a>
+                </div>
+                <div class="media-body">
+                  <h4 class="media-heading">
+                    <a href="{{ object.get_absolute_url }}">
+                      {{ object }}
+                    </a>
+                  </h4>
+                  <p class="pull-right">
+                    {{ object.created }}
+                  </p>
+                  <p>
+                    {{ object.description|truncatechars:100 }}
+                  </p>
+                </div>
+              </li>
+            {% empty %}
+              <li class="media">Empty</li>
+            {% endfor %}
+          </ul>
+        </div>
+    </div>
+  </div>
+
+  {% if is_paginated %}
+    <div class="row">
+      <div class="col-md-12" style="text-align:center;margin-top:-20px;">
+        <nav>
+          <ul class="pagination">
+            {% if page_obj.has_previous %}
+              <li>
+                <a href="?page={{ page_obj.previous_page_number }}">
+                  <span>&laquo;</span>
+                </a>
+              </li>
+            {% endif %}
+
+            {% for p in paginator.page_range %}
+              {% if p == page_obj.number %}
+                <li class="active"><span>{{ p }}</span></li>
+              {% else %}
+                <li><a href="?page={{ p }}">{{ p }}</a></li>
+              {% endif %}
+            {% endfor %}
+
+            {% if page_obj.has_next %}
+              <li>
+                <a href="?page={{ page_obj.next_page_number }}">
+                  <span>&raquo;</span>
+                </a>
+              </li>
+            {% endif %}
+          </ul>
+        </nav>
+      </div>
+    </div>
+  {% endif %}
+{% endblock %}

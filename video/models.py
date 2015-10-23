@@ -1,5 +1,6 @@
 # coding: utf-8
 from django.db import models
+from django.conf import settings
 from django.core.urlresolvers import reverse
 from django.utils.encoding import python_2_unicode_compatible
 from django.utils.functional import cached_property
@@ -13,17 +14,21 @@ class AbstractContentModel(models.Model):
     title = models.CharField(max_length=255)
     description = models.TextField(blank=True)
     cover = ImageField(blank=True)
+    created = models.DateTimeField(auto_now_add=True, db_index=True)
 
     def __str__(self):
         return self.title
 
     class Meta:
         abstract = True
+        ordering = ('-created',)
 
 
 class Collection(AbstractContentModel):
     """ Collection of videos
     """
+    user = models.ForeignKey(settings.AUTH_USER_MODEL)
+
     def get_absolute_url(self):
         return reverse('video:collection-detail', args=(self.pk,))
 
@@ -36,3 +41,7 @@ class Video(AbstractContentModel):
 
     def get_absolute_url(self):
         return reverse('video:video-detail', args=(self.pk,))
+
+    @cached_property
+    def user(self):
+        return self.collection.user
