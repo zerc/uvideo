@@ -2,7 +2,7 @@
 {% load bootstrap3 %}
 
 {% block breadcrumbs__inner %}
-  {% if form.instance %}
+  {% if form.instance.pk %}
     <li><a href="{{ form.instance.get_absolute_url }}">
       {{ form.instance }}
     </a></li>
