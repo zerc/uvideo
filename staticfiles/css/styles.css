@@ -55,9 +55,12 @@ a.navbar-brand {
 .media-last {
     border: 0;
 }
-.media-list .media {
+.media-list .media, .sortable-placeholder {
     border-bottom: 1px solid #bce8f1;
     padding: 0 10px 10px 10px;
+    height: 75px;
+}
+.sortable-placeholder {
 }
 .collection_detail .media {
     border-color: #ddd;

@@ -1,4 +1,8 @@
 # coding: utf-8
+from funcy import silent
+
+from django.db import transaction
+from django.http import JsonResponse, Http404
 from django.views.generic import CreateView, DetailView, UpdateView, ListView
 
 from video import forms, models
@@ -33,3 +37,31 @@ class CollectionUpdateView(AttiribToContextMixin, AddUserToKwargs,
     model = models.Collection
     context__button_title = 'Update'
     context__form_title = 'Update collection'
+
+
+class CollectionUpdateVideoPos(CanUpdateMixin, UpdateView):
+    model = models.Collection
+    content_type = 'application/json'
+
+    def post(self, *args, **kwargs):
+        new_orders = self.request.POST.copy()
+        result = JsonResponse({})
+
+        if not new_orders:
+            return result
+
+        obj = self.get_object()
+
+        with transaction.atomic():
+            for video in obj.video_set.all():
+                video.order = new_orders.get(str(video.pk))
+                if video.order is not None:
+                    video.save()
+
+        return result
+
+    def get_success_url(self):
+        return None
+
+    def get(self, *args, **kwargs):
+        raise Http404

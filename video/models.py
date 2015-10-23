@@ -37,7 +37,11 @@ class Video(AbstractContentModel):
     """ One video
     """
     collection = models.ForeignKey(Collection)
+    order = models.IntegerField(default=0, db_index=True)
     video_file = FileField()
+
+    class Meta:
+        ordering = ('order', '-created', '-id')
 
     def get_absolute_url(self):
         return reverse('video:video-detail', args=(self.pk,))

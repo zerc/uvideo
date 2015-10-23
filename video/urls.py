@@ -15,6 +15,10 @@ urlpatterns = (
         login_required(views.CollectionUpdateView.as_view()),
         name='collection-update'),
 
+    url(r'^(?P<pk>\d+)/update-video-order$',
+        login_required(views.CollectionUpdateVideoPos.as_view()),
+        name='collection-update-video-order'),
+
     url(r'^(?P<pk>\d+)/$', views.CollectionDetailView.as_view(),
         name='collection-detail'),
 
@@ -27,5 +31,5 @@ urlpatterns = (
 
     url(r'^video/(?P<pk>\d+)/delete$',
         login_required(views.VideoDeleteView.as_view()),
-        name='video-delete')
+        name='video-delete'),
 )

@@ -18,7 +18,7 @@
 
         $.post(url)
             .done(function () {
-                $el.remove();
+                $el.closest('li').remove();
             })
             .fail(function () {
                 alert("Can't delete photo");
@@ -32,4 +32,22 @@
         var randomColor = Math.floor(Math.random()*16777215).toString(16);
         $(this).css('background', '#' + randomColor);
     });
+
+
+    (function () {
+        var sortable = $('.sortable'),
+            url = sortable.data('href');
+
+        sortable.sortable().bind('sortupdate', function(e, ui) {
+            var data = {};
+
+            sortable.find('li').each(function (i, el) {
+                data[$(el).data('id')] = i;
+            });
+
+            $.post(url, data, function (data) {
+                console.log(data);
+            });
+        });
+    }());
 }($))

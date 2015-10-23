@@ -2,6 +2,11 @@
 {% load bootstrap3 %}
 
 {% block breadcrumbs__inner %}
+  {% if form.instance %}
+    <li><a href="{{ form.instance.get_absolute_url }}">
+      {{ form.instance }}
+    </a></li>
+  {% endif %}
   <li>{{ form_title }}</li>
 {% endblock %}
 
@@ -18,24 +23,59 @@
 
   {% if form.instance.pk and form.instance.video_set %}
     <h4>Videos</h4>
+    <p class="text-muted">Use drag & drop for changing videos order.</p>
     <hr>
-    <div style="margin-left:-10px;">
-    {% for p in form.instance.video_set.all %}
-      <a href="{% url 'video:video-delete' p.pk %}" class="video_remove_link js-remove-video" title="Delete video from collection">
-        <div class="video_remove_overflow">
-          <span class="glyphicon glyphicon-remove"></span>
-        </div>
-        {% if p.cover %}
-          <img src="{{ p.cover.cdn_url }}-/scale_crop/64x64/center/" width="64" height="64" />
-        {% else %}
-          <div class="no_cover js-no-cover"></div>
-        {% endif %}
-      </a>
-    {% empty %}
-      <p style="padding-left:10px;">No videos.</p>
-    {% endfor %}
-    </div>
-  {% endif %}
+
+    <ul class="media-list collection_detail sortable" data-href="{% url 'video:collection-update-video-order' form.instance.pk %}">
+      {% for video in form.instance.video_set.all %}
+        <li class="media" data-id="{{ video.pk }}">
+          <div class="media-left">
+            <a href="{{ video.get_absolute_url }}">
+              {% if video.cover %}
+                <img class="media-object" src="{{ video.cover.cdn_url }}-/scale_crop/64x64/center/" />
+              {% else %}
+                <div class="no_cover js-no-cover"></div>
+              {% endif %}
+            </a>
+          </div>
+          <div class="media-body">
+            <h4 class="media-heading">
+              <a href="{{ video.get_absolute_url }}">
+                {{ video }}
+              </a>
+              {% buttons %}
+                <a href="{% url 'video:video-delete' video.pk %}" class="btn btn-danger pull-right js-remove-video" style="margin-top:-10px;">
+                  {% bootstrap_icon button_icon %} Remove
+                </a>
+              {% endbuttons %}
+            </h4>
+            <p>
+              {{ video.description|truncatechars:100 }}
+            </p>
+          </div>
+        </li>
+      {% endfor %}
+    </ul>
+
+    {% comment %}
+      <div style="margin-left:-10px;">
+      {% for p in form.instance.video_set.all %}
+        <a href="{% url 'video:video-delete' p.pk %}" class="video_remove_link" title="Delete video from collection">
+          <div class="video_remove_overflow">
+            <span class="glyphicon glyphicon-remove"></span>
+          </div>
+          {% if p.cover %}
+            <img src="{{ p.cover.cdn_url }}-/scale_crop/64x64/center/" width="64" height="64" />
+          {% else %}
+            <div class="no_cover js-no-cover"></div>
+          {% endif %}
+        </a>
+      {% empty %}
+        <p style="padding-left:10px;">No videos.</p>
+      {% endfor %}
+      </div>
+    {% endcomment %}
+    {% endif %}
 {% endblock %}
 
 {% block js %}
@@ -43,6 +83,8 @@
   {{ form.media }}
   <script type="text/javascript">
     $(function () {
+      //js-remove-video
+
       // Hack for changing button title
       var interval_id = setInterval(function () {
         var target = $('input[name="cover"]')

@@ -1,5 +1,6 @@
 # coding: utf-8
 from django.http import Http404
+from django.views.generic import UpdateView
 
 
 class AttiribToContextMixin(object):
@@ -20,7 +21,7 @@ class CanUpdateMixin(object):
         obj = super(CanUpdateMixin, self).get_object(*args, **kwargs)
 
         # For update views - check permissions for object
-        if getattr(self, 'form_class', None):
+        if isinstance(self, UpdateView):
             if self.request.user.is_superuser:
                 return obj
 
